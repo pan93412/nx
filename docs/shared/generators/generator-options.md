@@ -101,3 +101,88 @@ Dynamic options can prompt the user to select from a list of options. To define 
 ```
 
 Running the generator without providing a value for the type will prompt the user to make a selection.
+
+## All configurable schema options
+
+### Overview
+
+#### Schema
+
+```json5
+{
+  "properties": {
+    "name": {} // see Properties
+  },
+  "required": {},
+  "description": "",
+  "definitions": {}, // same as "properties"
+  "additionalProperties": false,
+}
+```
+
+- properties: see `Properties`
+- definitions: see `"properties"`
+
+### Properties
+
+```json
+{
+  "type": "",
+  "required": [],
+  "enum": [],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Library name",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      }
+    },
+  },
+  "oneOf": [],
+  "anyOf": [],
+  "allOf": [],
+  "items": [],
+  "alias": "",
+  "aliases": [],
+  "description": "",
+  "format": "",
+  "visible": false,
+  "default": "",
+  "$ref": "",
+  "$default": {
+    "$source": "argv",
+    "index": 0
+  },
+  "additionalProperties": false,
+  "x-prompt": {
+    "message": "",
+    "type": "",
+    "items": []
+  },
+  "x-deprecated": false,
+}
+```
+
+Number-only options:
+
+```json
+{
+  "multipleOf": 5,
+  "minimum": 5,
+  "exclusiveMinimum": 5,
+  "maximum": 200,
+  "exclusiveMaximum": 200,
+}
+```
+
+String-only options:
+
+```json
+  "pattern": "\\d+",
+  "minLength": 10,
+  "maxLength": 100,
+```
+
+[The current configurable options (and its parse method) can be found here](https://github.com/nrwl/nx/blob/master/packages/tao/src/shared/params.ts). You would need a basic knowledge of TypeScript to read this.
