@@ -71,7 +71,8 @@ Dynamic options can prompt the user to select from a list of options. To define 
       "$default": {
         "$source": "argv",
         "index": 0
-      }
+      },
+      "x-prompt": "What is your desired library name?",
     },
     "type": {
       "type": "string",
@@ -206,9 +207,10 @@ WIP. Not pretty sure what it is, either.
   "x-prompt": {
     "message": "",
     "type": "",
-    "items": []
+    "items": [],
+    "multiselect": false
   },
-  "x-deprecated": false,
+  "x-deprecated": false
 }
 ```
 
@@ -218,18 +220,20 @@ Options available in `number` type:
 {
   "multipleOf": 5,
   "minimum": 5,
-  "exclusiveMinimum": 5,
+  "exclusiveMinimum": 4,
   "maximum": 200,
-  "exclusiveMaximum": 200,
+  "exclusiveMaximum": 201
 }
 ```
 
 Options available in `string` type:
 
 ```json
+{
   "pattern": "\\d+",
   "minLength": 10,
-  "maxLength": 100,
+  "maxLength": 100
+}
 ```
 
 #### `type`
@@ -486,11 +490,13 @@ Reference to somewhere. WIP.
 
 #### `$default`
 
-The default source of this property. It has two forms:
+The default source of this property. The full declaration of `$default` is:
 
 ```ts
-{ $source: 'argv'; index: number } |
-{ $source: 'projectName' };
+// with ? - optional
+// without ? - required
+// | - or
+$default?: { $source: 'argv'; index: number } | { $source: 'projectName' };
 ```
 
 Example of `$source: argv`:
@@ -536,7 +542,75 @@ Unknown. WIP.
 
 #### `x-prompt`
 
-Complex. WIP.
+Prompt and help user to input the value of the property. The full example can be seen at [Adding dynamic prompts](#adding-dynamic-prompts).
+
+`x-prompt` can be a `string` or an `object`. The full declaration is:
+
+```ts
+// with ? - optional
+// without ? - required
+// | - or
+'x-prompt'?:
+  | string
+  | | { message: string; type: string; items: any[]; multiselect?: boolean };
+```
+
+##### ⚠️ `x-prompt` > `message`
+
+The prompt message.
+
+Example: `Which type of library would you like to generate?`
+
+##### ⚠️ `x-prompt` > `type`
+
+The type of the prompt.
+
+##### ⚠️ `x-prompt` > `items`
+
+The choice of the prompt. The `x-prompt.type` must be `list`. The declaration of `items` is:
+
+```ts
+items?: (string | { name: string; message: string })[];
+```
+
+Example that contains `value` and `label`:
+
+```json
+{
+  "style": {
+    "description": "The file extension to be used for style files.",
+    "type": "string",
+    "default": "css",
+    "enum": ["css", "scss", "sass", "less"],
+    "x-prompt": {
+      "message": "Which stylesheet format would you like to use?",
+      "type": "list",
+      "items": [
+        {
+          "value": "css",
+          "label": "CSS"
+        },
+        {
+          "value": "scss",
+          "label": "SASS(.scss)  [ http://sass-lang.com   ]"
+        },
+        {
+          "value": "sass",
+          "label": "SASS(.sass)  [ http://sass-lang.com   ]"
+        },
+        {
+          "value": "less",
+          "label": "LESS         [ http://lesscss.org     ]"
+        }
+      ]
+    }
+  }
+}
+```
+
+##### `x-prompt` > `multiselect`
+
+Allow to multi-select in the prompt.
 
 #### `x-deprecated`
 
@@ -568,7 +642,7 @@ It indicates that users should use the `tsconfig` property rather than specify t
 
 #### `number` specific: `multipleOf`
 
-Make sure that the `number` can be divide by the specified number. Example:
+Make sure that the number can be divided by the specified number. Example:
 
 ```json
 {
@@ -580,6 +654,119 @@ Make sure that the `number` can be divide by the specified number. Example:
 ```
 
 In this example, `a` **only** accepts the value that can be divided by 5.
+
+#### `number` specific: `minimum`
+
+Make sure that the number is greater than or equal the specified number.
+
+```json
+{
+  "value": {
+    "type": "number",
+    "minimum": 5
+  }
+}
+```
+
+In this example, `value` **only** accepts the value that is greater than or equal to 5 (`value >= 5`).
+
+You can read more at [Understanding JSON schema](https://json-schema.org/understanding-json-schema/reference/numeric.html#range).
+
+#### `number` specific: `exclusiveMinimum`
+
+Make sure that the number is greater than the specified number.
+
+```json
+{
+  "value": {
+    "type": "number",
+    "exclusiveMinimum": 4,
+  }
+}
+```
+
+In this example, `value` **only** accepts the value that is greater than 4 (`value > 4`).
+
+You can read more at [Understanding JSON schema](https://json-schema.org/understanding-json-schema/reference/numeric.html#range).
+
+#### `number` specific: `maximum`
+
+Make sure that the number is less than or equal the specified number.
+
+```json
+{
+  "value": {
+    "type": "number",
+    "maximum": 200
+  }
+}
+```
+
+In this example, `value` **only** accepts the value that is less than or equal to 200 (`value <= 200`).
+
+You can read more at [Understanding JSON schema](https://json-schema.org/understanding-json-schema/reference/numeric.html#range).
+
+#### `number` specific: `exclusiveMaximum`
+
+Make sure that the number is less than the specified number.
+
+```json
+{
+  "value": {
+    "type": "number",
+    "maximum": 201
+  }
+}
+```
+
+In this example, `value` **only** accepts the value that is less than 201 (`value < 201`).
+
+You can read more at [Understanding JSON schema](https://json-schema.org/understanding-json-schema/reference/numeric.html#range).
+
+#### `string` specific: `pattern`
+
+Make sure that the string matches the RegExp pattern.
+
+```json
+{
+  "value": {
+    "type": "string",
+    "pattern": "^\\d+$"
+  }
+}
+```
+
+In this example, `value` requires the value to match the `^\\d+$` pattern, which is a regular expression that matches the string that contains only digits.
+
+#### `string` specific: `minLength`
+
+Make sure that the string length is greater than or equal to the specified value.
+
+```json
+{
+  "value": {
+    "type": "string",
+    "minLength": 10,
+  }
+}
+```
+
+In this example, `value` requires the value to be at least 10 characters long.
+
+#### `string` specific: `maxLength`
+
+Make sure that the string length is less than or equal to the specified value.
+
+```json
+{
+  "value": {
+    "type": "string",
+    "maxLength": 10,
+  }
+}
+```
+
+In this example, `value` requires the value to be at most 10 characters long.
 
 ### More information
 
