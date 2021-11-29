@@ -117,7 +117,7 @@ Properties tagged with ⚠️ are required. Others are optional.
   "required": [],
   "description": "",
   "definitions": {}, // same as "properties"
-  "additionalProperties": false,
+  "additionalProperties": false
 }
 ```
 
@@ -134,7 +134,7 @@ The properties of a generator. It is formed in:
 ```
 
 The available options of the properties configuration can be
-seen at [Properties](#properties-1) section.
+seen at [Properties](#properties) section.
 
 #### `required`
 
@@ -238,10 +238,7 @@ Options available in `string` type:
 
 #### `type`
 
-The type can be either of `string`, `number`, `bigint`, `boolean`, `object` or `array`.
-
-You can use the specific options above when typing in the
-specific type.
+The type of the input. Can be either of `string`, `number`, `bigint`, `boolean`, `object` or `array`.
 
 Example:
 
@@ -252,11 +249,11 @@ Example:
 }
 ```
 
-### `required`
+#### `required`
 
 WIP
 
-### `enum`
+#### `enum`
 
 Make sure that the value is in the enumeration. Example:
 
@@ -276,7 +273,7 @@ WIP
 
 #### `oneOf`
 
-Match only one of the condition properties. Example:
+Only accepts that value that matches either of the condition properties. Example:
 
 ```json
 {
@@ -295,7 +292,7 @@ Match only one of the condition properties. Example:
 }
 ```
 
-In this example, `sourceMap` accepts the value typed in either `boolean` or `string`. Another example:
+In this example, `sourceMap` accepts the value whose type is either `boolean` or `string`. Another example:
 
 ```json
 {
@@ -326,11 +323,11 @@ In this example, `sourceMap` accepts the value typed in either `boolean` or `str
 }
 ```
 
-`optimization` accepts an object that includes `scripts` and `styles` properties, or an boolean that switches the optimization on or off.
+`optimization` accepts either an object that includes `scripts` and `styles` properties, or an boolean that switches the optimization on or off.
 
 #### `anyOf`
 
-Match any of the condition properties. Example:
+Only accepts that value that matches one of the condition properties. Example:
 
 ```json
 {
@@ -366,14 +363,14 @@ In this example, `format` accepts the string including in the `enum` property, o
 
 #### `allOf`
 
-Match all of the condition properties. Example:
+Only accepts that value that matches all of the condition properties.  Example:
 
 ```json
 {
   "a": {
     "type": "number",
     "allOf": [{ "multipleOf": 5 }, { "multipleOf": 3 }],
-  },
+  }
 }
 ```
 
@@ -398,11 +395,11 @@ The alias of this property. Example:
     "type": "string",
     "description": "A directory where the project is placed",
     "alias": "d"
-  },
+  }
 }
 ```
 
-You can pass either `--tags` or `-t` to specify the value of the property `tag`; either `--directory` or `-d` to specify the value of the property `directory`.
+You can pass either `--tags` or `-t` to provide the value of the property `tag`; either `--directory` or `-d` to provide the value of the property `directory`.
 
 #### `aliases`
 
@@ -418,12 +415,11 @@ Mostly same as `alias`, but it can accept multiple aliases. Example:
 }
 ```
 
-You can pass either `--dir`, `--path` or even `--directory` to specify the value of the property `directory`.
+You can pass either `--dir`, `--path` or even `--directory` to provide the value of the property `directory`.
 
 #### `description`
 
-The description of your property for user to understand
-the function of it. Example:
+The description for users of your property. Example:
 
 ```json
 {
@@ -450,7 +446,7 @@ The format of this property. Available options are: `path`, `html-selector`, and
 }
 ```
 
-In this example, the `prefix` should be formed in the `html-selector` schema.
+In this example, the providing value of `prefix` should be formed in the `html-selector` schema.
 
 #### `visible`
 
@@ -465,7 +461,7 @@ Indicate that if the property should be visible in the configuration UI. Example
 }
 ```
 
-According to the source code, the `path` won't be visible in the configuration UI, and will default to the relative path (if available and users do not specify that property).
+According to the source code: the `path` won't be visible in the configuration UI, and will default to the relative path (if available and users do not provide that property).
 
 #### `default`
 
@@ -478,11 +474,11 @@ The default value of this property. Example:
     "type": "string",
     "enum": ["eslint", "tslint"],
     "default": "eslint"
-  },
+  }
 }
 ```
 
-In this example, `linter` will pick `eslint` when users do not specify that explicitly.
+In this example, `linter` will pick `eslint` when users do not provide the value explicitly.
 
 #### `$ref`
 
@@ -512,11 +508,11 @@ Example of `$source: argv`:
     },
     "x-prompt": "What name would you like to use for the library?",
     "pattern": "^[a-zA-Z].*$"
-  },
+  }
 }
 ```
 
-`name` will pick the first argument of the command line as the default value of the property `name`.
+`name` will pick the first argument of the command line as the default value.
 
 Example of `$source: projectName`:
 
@@ -534,7 +530,7 @@ Example of `$source: projectName`:
 }
 ```
 
-`project` will pick the default project name as the default value of it.
+`project` will pick the default project name as the default value.
 
 #### `additionalProperties`
 
@@ -552,7 +548,7 @@ Prompt and help user to input the value of the property. The full example can be
 // | - or
 'x-prompt'?:
   | string
-  | | { message: string; type: string; items: any[]; multiselect?: boolean };
+  | { message: string; type: string; items: any[]; multiselect?: boolean };
 ```
 
 ##### ⚠️ `x-prompt` > `message`
@@ -570,6 +566,9 @@ The type of the prompt.
 The choice of the prompt. The `x-prompt.type` must be `list`. The declaration of `items` is:
 
 ```ts
+// with ? - optional
+// without ? - required
+// | - or
 items?: (string | { name: string; message: string })[];
 ```
 
@@ -614,7 +613,7 @@ Allow to multi-select in the prompt.
 
 #### `x-deprecated`
 
-Indicate that if the property is deprecated. Can be a `boolean` or a `string`. `boolean` example:
+Indicate that if the property is deprecated. Can be a `boolean` or a `string`. The `boolean` example:
 
 ```json
 {
@@ -622,11 +621,11 @@ Indicate that if the property is deprecated. Can be a `boolean` or a `string`. `
     "description": "The name of a setup file used by Jest. (use Jest config file https://jestjs.io/docs/en/configuration#setupfilesafterenv-array)",
     "type": "string",
     "x-deprecated": true
-  },
+  }
 }
 ```
 
-It indicates that the property `setupFile` is deprecated but without the reason. `string` example:
+It indicates that the property `setupFile` is deprecated without a reason. The `string` example:
 
 ```json
 {
@@ -649,7 +648,7 @@ Make sure that the number can be divided by the specified number. Example:
   "a": {
     "type": "number",
     "multipleOf": 5
-  },
+  }
 }
 ```
 
