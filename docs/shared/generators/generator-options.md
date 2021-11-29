@@ -104,24 +104,82 @@ Running the generator without providing a value for the type will prompt the use
 
 ## All configurable schema options
 
-### Overview
-
-#### Schema
+### Schema
 
 ```json5
 {
   "properties": {
     "name": {} // see Properties
   },
-  "required": {},
+  "required": [],
   "description": "",
   "definitions": {}, // same as "properties"
   "additionalProperties": false,
 }
 ```
 
-- properties: see `Properties`
-- definitions: see `"properties"`
+#### `properties`
+
+The properties of a generator. It is formed in:
+
+```json5
+{
+  "properties_name": {
+    // properties configuration
+  }
+}
+```
+
+The available options of the properties configuration can be
+seen at [Properties](#properties) section.
+
+#### `required`
+
+The properties that is required. Example:
+
+```json
+{
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    }
+  },
+  "required": ["name"]
+}
+```
+
+In this example, the property `name` is required, while
+the property `type` is optional. You can define your schema like:
+
+```ts
+interface Schema {
+  name: string; // required
+  type?: string; // optional
+}
+```
+
+#### `description`
+
+The description of your schema for user to understand
+what he can do with the generator.
+
+Example: `A exception class generator.`
+
+#### `definitions`
+
+<!-- wip -->
+
+Not pretty sure what it is. Its structure is pretty similar
+to `properties`.
+
+#### `additionalProperties`
+
+<!-- wip -->
+
+Not pretty sure what it is, either.
 
 ### Properties
 
