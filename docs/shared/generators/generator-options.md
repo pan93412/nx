@@ -106,7 +106,7 @@ Running the generator without providing a value for the type will prompt the use
 
 ### Schema
 
-```json5
+```json
 {
   "properties": {
     "name": {} // see Properties
@@ -122,7 +122,7 @@ Running the generator without providing a value for the type will prompt the use
 
 The properties of a generator. It is formed in:
 
-```json5
+```json
 {
   "properties_name": {
     // properties configuration
