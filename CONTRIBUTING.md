@@ -159,7 +159,7 @@ By default, the site displays the `Latest` cut release of the docs. To see your 
 
 #### When occurred `JavaScript heap out of memory`
 
-When you occurred `FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory`, you would need to set up `NODE_OPTIONS`:
+When you occurred `FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory`, you would need to [increase the max memory size of V8's old memory section](https://nodejs.org/api/cli.html#--max-old-space-sizesize-in-megabytes):
 
 ```bash
 export NODE_OPTIONS="--max-old-space-size=4096"
