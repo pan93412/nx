@@ -104,6 +104,8 @@ Running the generator without providing a value for the type will prompt the use
 
 ## All configurable schema options
 
+Properties tagged with ⚠️ are required. Others are optional.
+
 ### Schema
 
 ```json
@@ -118,7 +120,7 @@ Running the generator without providing a value for the type will prompt the use
 }
 ```
 
-#### `properties`
+#### ⚠️ `properties`
 
 The properties of a generator. It is formed in:
 
