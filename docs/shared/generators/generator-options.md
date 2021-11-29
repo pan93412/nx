@@ -131,7 +131,7 @@ The properties of a generator. It is formed in:
 ```
 
 The available options of the properties configuration can be
-seen at [Properties](#properties) section.
+seen at [Properties](#properties-1) section.
 
 #### `required`
 
@@ -170,16 +170,12 @@ Example: `A exception class generator.`
 
 #### `definitions`
 
-<!-- wip -->
-
-Not pretty sure what it is. Its structure is pretty similar
+WIP. Not pretty sure what it is. Its structure is pretty similar
 to `properties`.
 
 #### `additionalProperties`
 
-<!-- wip -->
-
-Not pretty sure what it is, either.
+WIP. Not pretty sure what it is, either.
 
 ### Properties
 
@@ -188,16 +184,7 @@ Not pretty sure what it is, either.
   "type": "",
   "required": [],
   "enum": [],
-  "properties": {
-    "name": {
-      "type": "string",
-      "description": "Library name",
-      "$default": {
-        "$source": "argv",
-        "index": 0
-      }
-    },
-  },
+  "properties": {},
   "oneOf": [],
   "anyOf": [],
   "allOf": [],
@@ -223,7 +210,7 @@ Not pretty sure what it is, either.
 }
 ```
 
-Number-only options:
+Options available in `number` type:
 
 ```json
 {
@@ -235,12 +222,363 @@ Number-only options:
 }
 ```
 
-String-only options:
+Options available in `string` type:
 
 ```json
   "pattern": "\\d+",
   "minLength": 10,
   "maxLength": 100,
 ```
+
+#### `type`
+
+The type can be either of `string`, `number`, `bigint`, `boolean`, `object` or `array`.
+
+You can use the specific options above when typing in the
+specific type.
+
+Example:
+
+```json
+{
+  "type": "string",
+  "minLength": "10"
+}
+```
+
+### `required`
+
+WIP
+
+### `enum`
+
+Make sure that the value is in the enumeration. Example:
+
+```json
+{
+  "type": "string",
+  "enum": ["foo", "bar"]
+
+  // valid case: `foo`, `bar`
+  // invalid case: any other string like `hello`
+}
+```
+
+#### `properties`
+
+WIP
+
+#### `oneOf`
+
+Match only one of the condition properties. Example:
+
+```json
+{
+  "sourceMap": {
+    "description": "Output sourcemaps. Use 'hidden' for use with error reporting tools without generating sourcemap comment.",
+    "default": true,
+    "oneOf": [
+      {
+        "type": "boolean"
+      },
+      {
+        "type": "string"
+      }
+    ]
+  }
+}
+```
+
+In this example, `sourceMap` accepts the value typed in either `boolean` or `string`. Another example:
+
+```json
+{
+  "optimization": {
+    "description": "Enables optimization of the build output.",
+    "oneOf": [
+      {
+        "type": "object",
+        "properties": {
+          "scripts": {
+            "type": "boolean",
+            "description": "Enables optimization of the scripts output.",
+            "default": true
+          },
+          "styles": {
+            "type": "boolean",
+            "description": "Enables optimization of the styles output.",
+            "default": true
+          }
+        },
+        "additionalProperties": false
+      },
+      {
+        "type": "boolean"
+      }
+    ]
+  }
+}
+```
+
+`optimization` accepts an object that includes `scripts` and `styles` properties, or an boolean that switches the optimization on or off.
+
+#### `anyOf`
+
+Match any of the condition properties. Example:
+
+```json
+{
+  "format": {
+    "type": "string",
+    "description": "ESLint Output formatter (https://eslint.org/docs/user-guide/formatters).",
+    "default": "stylish",
+    "anyOf": [
+      {
+        "enum": [
+          "stylish",
+          "compact",
+          "codeframe",
+          "unix",
+          "visualstudio",
+          "table",
+          "checkstyle",
+          "html",
+          "jslint-xml",
+          "json",
+          "json-with-metadata",
+          "junit",
+          "tap"
+        ]
+      },
+      { "minLength": 1 }
+    ]
+  }
+}
+```
+
+In this example, `format` accepts the string including in the `enum` property, or/and the string whose minimum length is larger than 1.
+
+#### `allOf`
+
+Match all of the condition properties. Example:
+
+```json
+{
+  "a": {
+    "type": "number",
+    "allOf": [{ "multipleOf": 5 }, { "multipleOf": 3 }],
+  },
+}
+```
+
+In this example, `a` only accepts the value that can be divided by 5 **and** 3.
+
+#### `items`
+
+WIP. Unsure what it is.
+
+#### `alias`
+
+The alias of this property. Example:
+
+```json
+{
+  "tags": {
+    "type": "string",
+    "description": "Add tags to the project (used for linting)",
+    "alias": "t"
+  },
+  "directory": {
+    "type": "string",
+    "description": "A directory where the project is placed",
+    "alias": "d"
+  },
+}
+```
+
+You can pass either `--tags` or `-t` to specify the value of the property `tag`; either `--directory` or `-d` to specify the value of the property `directory`.
+
+#### `aliases`
+
+Mostly same as `alias`, but it can accept multiple aliases. Example:
+
+```json
+{
+  "directory": {
+    "description": "Directory where the generated files are placed.",
+    "type": "string",
+    "aliases": ["dir", "path"]
+  }
+}
+```
+
+You can pass either `--dir`, `--path` or even `--directory` to specify the value of the property `directory`.
+
+#### `description`
+
+The description of your property for user to understand
+the function of it. Example:
+
+```json
+{
+  "flat": {
+    "description": "Flag to indicate if a directory is created.",
+    "type": "boolean",
+    "default": false
+  }
+}
+```
+
+#### `format`
+
+The format of this property. Available options are: `path`, `html-selector`, and etc. Example:
+
+```json
+{
+  "prefix": {
+    "type": "string",
+    "format": "html-selector",
+    "description": "The prefix to apply to generated selectors.",
+    "alias": "p"
+  }
+}
+```
+
+In this example, the `prefix` should be formed in the `html-selector` schema.
+
+#### `visible`
+
+Indicate that if the property should be visible in the configuration UI. Example:
+
+```json
+{
+  "path": {
+    "format": "path",
+    "visible": false,
+  }
+}
+```
+
+According to the source code, the `path` won't be visible in the configuration UI, and will default to the relative path (if available and users do not specify that property).
+
+#### `default`
+
+The default value of this property. Example:
+
+```json
+{
+  "linter": {
+    "description": "The tool to use for running lint checks.",
+    "type": "string",
+    "enum": ["eslint", "tslint"],
+    "default": "eslint"
+  },
+}
+```
+
+In this example, `linter` will pick `eslint` when users do not specify that explicitly.
+
+#### `$ref`
+
+Reference to somewhere. WIP.
+
+#### `$default`
+
+The default source of this property. It has two forms:
+
+```ts
+{ $source: 'argv'; index: number } |
+{ $source: 'projectName' };
+```
+
+Example of `$source: argv`:
+
+```json
+{
+  "name": {
+    "type": "string",
+    "description": "Library name",
+    "$default": {
+      "$source": "argv",
+      "index": 0
+    },
+    "x-prompt": "What name would you like to use for the library?",
+    "pattern": "^[a-zA-Z].*$"
+  },
+}
+```
+
+`name` will pick the first argument of the command line as the default value of the property `name`.
+
+Example of `$source: projectName`:
+
+```json
+{
+  "project": {
+    "type": "string",
+    "description": "The name of the project.",
+    "alias": "p",
+    "$default": {
+      "$source": "projectName"
+    },
+    "x-prompt": "What is the name of the project for the migration?"
+  }
+}
+```
+
+`project` will pick the default project name as the default value of it.
+
+#### `additionalProperties`
+
+Unknown. WIP.
+
+#### `x-prompt`
+
+Complex. WIP.
+
+#### `x-deprecated`
+
+Indicate that if the property is deprecated. Can be a `boolean` or a `string`. `boolean` example:
+
+```json
+{
+  "setupFile": {
+    "description": "The name of a setup file used by Jest. (use Jest config file https://jestjs.io/docs/en/configuration#setupfilesafterenv-array)",
+    "type": "string",
+    "x-deprecated": true
+  },
+}
+```
+
+It indicates that the property `setupFile` is deprecated but without the reason. `string` example:
+
+```json
+{
+  "tsSpecConfig": {
+    "type": "string",
+    "description": "The tsconfig file for specs.",
+    "x-deprecated": "Use the `tsconfig` property for `ts-jest` in the e2e project `jest.config.js` file. It will be removed in the next major release."
+  }
+}
+```
+
+It indicates that users should use the `tsconfig` property rather than specify this property.
+
+#### `number` specific: `multipleOf`
+
+Make sure that the `number` can be divide by the specified number. Example:
+
+```json
+{
+  "a": {
+    "type": "number",
+    "multipleOf": 5
+  },
+}
+```
+
+In this example, `a` **only** accepts the value that can be divided by 5.
+
+### More information
 
 [The current configurable options (and its parse method) can be found here](https://github.com/nrwl/nx/blob/master/packages/tao/src/shared/params.ts). You would need a basic knowledge of TypeScript to read this.
